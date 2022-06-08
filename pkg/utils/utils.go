@@ -22,8 +22,7 @@ func ParseBody(r *http.Request, x interface{}) {
 	}
 }
 
-
-// these vars will be used to load DB environment 
+// these vars will be used to load DB environment
 var _ = godotenv.Load(".env")
 var (
 	ConnectionString = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",

@@ -9,11 +9,11 @@ var db *gorm.DB
 
 type Book struct {
 	gorm.Model
-	BookID     uint32 `gorm:"primary_key;auto_increment" json:"id"`
-	BookName   string `gorm:"size:255;not null;unique"   json:"bookname"`
-	BookDate   string `gorm:"size:4;not null"            json:"bookdate"`
-	AuthorName string `gorm:"size:255;not null;unique"   json:"authorname"`
-	AuthorDate string `gorm:"size:4;not null"            json:"authordate"`
+	BookID     uint32 `gorm:"primary_key;auto_increment" json:"id"           validate:"isdefault"`
+	BookName   string `gorm:"size:255;not null;unique"   json:"bookname"     validate:"required"`
+	BookDate   string `gorm:"size:4;not null"            json:"bookdate"     validate:"required"`
+	AuthorName string `gorm:"size:255;not null;unique"   json:"authorname"   validate:"required"`
+	AuthorDate string `gorm:"size:4;not null"            json:"authordate"   validate:"required"`
 }
 
 // this function will initialize db connection
@@ -30,27 +30,26 @@ func init() {
 //                     			sql handlers                           //
 /////////////////////////////////////////////////////////////////////////
 
-
-func (b *Book) CreateBook() *Book{
+func (b *Book) CreateBook() *Book {
 	db.NewRecord(b)
 	db.Create(&b)
 	return b
 }
 
-func GetAllBooks()[]Book{
+func GetAllBooks() []Book {
 	var Books []Book
 	db.Find(&Books)
 	return Books
 }
 
-func GetBookByID(id int64) (*Book, *gorm.DB){
+func GetBookByID(id int64) (*Book, *gorm.DB) {
 	var book Book
 	db := db.Where("ID=?", id).Find(&book)
 	return &book, db
 
 }
 
-func DeleteBookByID(id int64)Book{
+func DeleteBookByID(id int64) Book {
 	var book Book
 	db.Where("ID=?", id).Delete(book)
 	return book
