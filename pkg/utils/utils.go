@@ -10,7 +10,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// this function тainly will be used with POST method, when creating a book entity,
+// this function mainly will be used with POST method, when creating a book entity,
 // which help us easily unmarshal requst json data
 func ParseBody(r *http.Request, x interface{}) {
 
