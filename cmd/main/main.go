@@ -14,7 +14,7 @@ import (
 func main() {
 	r := mux.NewRouter()
 	routes.RoutesHandlers(r)
-	log.Fatal(http.ListenAndServe(":8080", r))
-
 	fmt.Println("Server started on port - 8080")
+	log.Fatal(http.ListenAndServe("localhost:8080", r))
+
 }
