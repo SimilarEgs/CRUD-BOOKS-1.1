@@ -3,6 +3,8 @@ package dbconfig
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+
+	"github.com/SimilarEgs/CRUD-BOOKS-1.1/pkg/utils"
 )
 
 var (
@@ -11,7 +13,8 @@ var (
 
 // this function will serve us to create connection to mySQL db
 func CreateDbConnection() {
-	d, err := gorm.Open("mysql", "root:Eretika12@tcp(127.0.0.1:3306)/golang_test?charset=utf8&parseTime=True&loc=Local")
+
+	d, err := gorm.Open("mysql", utils.ConnectionString)
 	if err != nil {
 		panic(err)
 	}
