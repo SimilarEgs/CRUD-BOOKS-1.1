@@ -1,7 +1,7 @@
 package models
 
 import (
-	dbconfig "github.com/SimilarEgs/CRUD-BOOKS-1.1/pkg/DBconfig"
+	dbconfig "github.com/SimilarEgs/CRUD-BOOKS-1.1/pkg/dbconfig"
 	"github.com/jinzhu/gorm"
 )
 
@@ -17,7 +17,7 @@ type Book struct {
 }
 
 // this function will initialize db connection
-func init() {
+func Init() {
 
 	dbconfig.CreateDbConnection()
 	db = dbconfig.GetDB()
@@ -31,8 +31,8 @@ func init() {
 /////////////////////////////////////////////////////////////////////////
 
 func (b *Book) CreateBook() *Book {
-	db.NewRecord(b)
-	db.Create(&b)
+
+	db.Create(b)
 	return b
 }
 
