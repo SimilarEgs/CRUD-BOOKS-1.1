@@ -1,15 +1,14 @@
-package db
+package utils
 
 import (
 	"log"
 
-	"github.com/SimilarEgs/CRUD-BOOKS-1.1/utils"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 func CreateDBconnection() *gorm.DB {
-	dsn := utils.ConnectionString
+	dsn := ConnectionString
 	log.Fatal(dsn)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})

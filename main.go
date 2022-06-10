@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/SimilarEgs/CRUD-BOOKS-1.1/pkg/db"
 	"github.com/SimilarEgs/CRUD-BOOKS-1.1/pkg/models"
 	"github.com/SimilarEgs/CRUD-BOOKS-1.1/routes"
 	"github.com/gorilla/mux"
@@ -14,7 +13,7 @@ import (
 
 func main() {
 
-	var db = dbconfig.CreateDBconnection()
+	var db = db.CreateDBconnection()
 	models.InitDB(db)
 
 	r := mux.NewRouter()
