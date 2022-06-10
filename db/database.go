@@ -1,4 +1,4 @@
-package dbconfig
+package db
 
 import (
 	"log"

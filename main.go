@@ -5,9 +5,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/SimilarEgs/CRUD-BOOKS-1.1/pkg/dbconfig"
+	"github.com/SimilarEgs/CRUD-BOOKS-1.1/pkg/db"
 	"github.com/SimilarEgs/CRUD-BOOKS-1.1/pkg/models"
-	"github.com/SimilarEgs/CRUD-BOOKS-1.1/pkg/routes"
+	"github.com/SimilarEgs/CRUD-BOOKS-1.1/routes"
 	"github.com/gorilla/mux"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
