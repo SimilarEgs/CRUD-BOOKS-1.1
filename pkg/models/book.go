@@ -1,14 +1,14 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 var dbcon *gorm.DB
 
 type Book struct {
 	gorm.Model
-	BookID     uint32 `gorm:"primary_key;auto_increment" json:"id"           validate:"isdefault"`
+	ID         uint32 `gorm:"primary_key;auto_increment" json:"id"           validate:"isdefault"`
 	BookName   string `gorm:"size:255;not null;unique"   json:"bookname"     validate:"required"`
 	BookDate   string `gorm:"size:4;not null"            json:"bookdate"     validate:"required"`
 	AuthorName string `gorm:"size:255;not null;unique"   json:"authorname"   validate:"required"`
@@ -18,7 +18,6 @@ type Book struct {
 // this function will initialize db connection
 func InitDB(db *gorm.DB) {
 	dbcon = db
-
 	// migrate schema
 	db.AutoMigrate(&Book{})
 }

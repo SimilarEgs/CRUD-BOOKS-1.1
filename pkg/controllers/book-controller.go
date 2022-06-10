@@ -37,9 +37,6 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 	}
 	//insert request data into DB via «CreateBook» method
 	b := book.CreateBook()
-	//testing
-	res, _ := json.Marshal(b)
-	w.Write(res)
 	responses.JSON(w, http.StatusCreated, b)
 
 }
