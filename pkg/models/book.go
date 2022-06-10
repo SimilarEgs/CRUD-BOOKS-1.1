@@ -1,11 +1,10 @@
 package models
 
 import (
-	dbconfig "github.com/SimilarEgs/CRUD-BOOKS-1.1/pkg/dbconfig"
 	"github.com/jinzhu/gorm"
 )
 
-var db *gorm.DB
+var dbcon *gorm.DB
 
 type Book struct {
 	gorm.Model
@@ -17,10 +16,8 @@ type Book struct {
 }
 
 // this function will initialize db connection
-func Init() {
-
-	dbconfig.CreateDbConnection()
-	db = dbconfig.GetDB()
+func InitDB(db *gorm.DB) {
+	dbcon = db
 
 	// migrate schema
 	db.AutoMigrate(&Book{})
@@ -31,27 +28,26 @@ func Init() {
 /////////////////////////////////////////////////////////////////////////
 
 func (b *Book) CreateBook() *Book {
-
-	db.Create(b)
+	dbcon.Create(b)
 	return b
 }
 
 func GetAllBooks() []Book {
 	var Books []Book
-	db.Find(&Books)
+	dbcon.Find(&Books)
 	return Books
 }
 
 func GetBookByID(id int64) (*Book, *gorm.DB) {
 	var book Book
-	db := db.Where("ID=?", id).Find(&book)
+	db := dbcon.Where("ID=?", id).Find(&book)
 	return &book, db
 
 }
 
 func DeleteBookByID(id int64) Book {
 	var book Book
-	db.Where("ID=?", id).Delete(book)
+	dbcon.Where("ID=?", id).Delete(book)
 	return book
 }
 
