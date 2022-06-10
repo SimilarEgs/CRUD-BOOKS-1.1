@@ -7,8 +7,8 @@ import (
 
 	"github.com/go-playground/validator/v10"
 
-	"github.com/SimilarEgs/CRUD-BOOKS-1.1/pkg/models"
-	"github.com/SimilarEgs/CRUD-BOOKS-1.1/pkg/responses"
+	"github.com/SimilarEgs/CRUD-BOOKS-1.1/models"
+	"github.com/SimilarEgs/CRUD-BOOKS-1.1/responses"
 )
 
 var Book models.Book

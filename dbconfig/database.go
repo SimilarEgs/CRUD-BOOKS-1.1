@@ -3,7 +3,7 @@ package dbconfig
 import (
 	"log"
 
-	"github.com/SimilarEgs/CRUD-BOOKS-1.1/pkg/utils"
+	"github.com/SimilarEgs/CRUD-BOOKS-1.1/utils"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

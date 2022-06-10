@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/SimilarEgs/CRUD-BOOKS-1.1/pkg/controllers"
+	"github.com/SimilarEgs/CRUD-BOOKS-1.1/controllers"
 	"github.com/gorilla/mux"
 )
 
