@@ -21,7 +21,7 @@ func CreateDBconnection() *gorm.DB {
 	// open db connection
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
 
 	// setting mysql db settings

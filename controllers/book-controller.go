@@ -2,16 +2,30 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
+	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 
 	"github.com/SimilarEgs/CRUD-BOOKS-1.1/models"
 	"github.com/SimilarEgs/CRUD-BOOKS-1.1/responses"
 )
 
+// todo: it's a bad idea to keep it here
+// it's better to isolate db logic
+// and get db connection through the functin call
+// from a coresponding package
 var dbcon *gorm.DB
+
+func InitDB(db *gorm.DB) {
+
+	dbcon = db
+	db.AutoMigrate(&models.Book{})
+}
 
 func CreateBook(w http.ResponseWriter, r *http.Request) {
 
@@ -22,6 +36,7 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 	// processed request body
 	err := json.NewDecoder(r.Body).Decode(&book)
 	if err != nil {
+		log.Println(err)
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	}
@@ -30,6 +45,7 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 	validate := validator.New()
 	err = validate.Struct(book)
 	if err != nil {
+		log.Println(err)
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	}
@@ -37,16 +53,44 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 	// insert request entity into DB
 	err = dbcon.Create(&book).Error
 	if err != nil {
+		log.Println(err)
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, "book was sucesfully created")
+	responses.JSON(w, http.StatusOK, "[Info] book was sucesfully created")
 }
 
 func GetBookByID(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
+
+	var book = models.GetBook()
+
+	// extracting URL params
+	params := mux.Vars(r)
+
+	id, err := strconv.Atoi(params["id"])
+	if err != nil {
+		log.Println(err)
+		responses.JSON(w, http.StatusUnprocessableEntity, "[Error] id convertion failed, lokk")
+		return
+	}
+
+	// look into db with extracted ID, handle errors
+	res := dbcon.First(&book, "id = ?", id)
+
+	if res.Error != nil {
+		log.Println(res.Error)
+		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
+			responses.JSON(w, http.StatusNotFound, "[Info] record not found")
+		} else {
+			responses.JSON(w, http.StatusInternalServerError, "[Error] failed to extract book object")
+		}
+		return
+	}
+
+	responses.JSON(w, http.StatusOK, book)
 }
 
 func GetAllBooks(w http.ResponseWriter, r *http.Request) {
@@ -62,10 +106,4 @@ func DeleteBookByID(w http.ResponseWriter, r *http.Request) {
 func UpdateBookByID(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
-}
-
-func InitDB(db *gorm.DB) {
-
-	dbcon = db
-	db.AutoMigrate(&models.Book{})
 }
