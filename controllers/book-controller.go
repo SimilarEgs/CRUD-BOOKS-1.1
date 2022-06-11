@@ -82,15 +82,16 @@ func GetBookByID(w http.ResponseWriter, r *http.Request) {
 
 	if res.Error != nil {
 		log.Println(res.Error)
+
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
 			responses.JSON(w, http.StatusNotFound, "[Info] record not found")
 		} else {
-			responses.JSON(w, http.StatusInternalServerError, "[Error] failed to extract book object")
+			responses.JSON(w, http.StatusInternalServerError, "[Error] failed while extracting book object")
 		}
 		return
 	}
-
 	responses.JSON(w, http.StatusOK, book)
+
 }
 
 func GetAllBooks(w http.ResponseWriter, r *http.Request) {
@@ -103,8 +104,8 @@ func GetAllBooks(w http.ResponseWriter, r *http.Request) {
 
 	// checking existing records
 	if rw.RowsAffected == 0 {
-		log.Println("[Info] no entries in the table")
-		responses.JSON(w, http.StatusNotFound, "[Info] no entries in the table")
+		log.Println("[Info] no entries in the DB table")
+		responses.JSON(w, http.StatusNotFound, "[Info] no entries in the DB table")
 		return
 	}
 
@@ -127,6 +128,28 @@ func DeleteBookByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// look into db with extracted ID, handle errors
+	res := dbcon.First(&book, "id = ?", id)
+
+	if res.Error != nil {
+		log.Println(res.Error)
+
+		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
+			responses.JSON(w, http.StatusNotFound, "[Info] record not found")
+		} else {
+			responses.JSON(w, http.StatusInternalServerError, "[Error] occurred while deleting book entity")
+		}
+		return
+	}
+
+	rw := dbcon.Delete(&book)
+	// checking deletion resualt
+	if rw.RowsAffected != 1 {
+		responses.JSON(w, http.StatusInternalServerError, "[Error] occurred while deleting book entity")
+		return
+	}
+
+	responses.JSON(w, http.StatusNoContent, "[Info] book was sucesfully deleted")
 }
 
 func UpdateBookByID(w http.ResponseWriter, r *http.Request) {
