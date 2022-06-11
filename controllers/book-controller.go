@@ -15,7 +15,7 @@ import (
 	"github.com/SimilarEgs/CRUD-BOOKS-1.1/responses"
 )
 
-// todo: it's a bad idea to keep it here
+// todo:
 // it's better to isolate db logic
 // and get db connection through the functin call
 // from a coresponding package
@@ -73,7 +73,7 @@ func GetBookByID(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
 		log.Println(err)
-		responses.JSON(w, http.StatusUnprocessableEntity, "[Error] id convertion failed, lokk")
+		responses.JSON(w, http.StatusUnprocessableEntity, "[Error] id convertion failed")
 		return
 	}
 
@@ -96,11 +96,37 @@ func GetBookByID(w http.ResponseWriter, r *http.Request) {
 func GetAllBooks(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
+
+	var books = models.GetBooks()
+
+	rw := dbcon.Find(&books)
+
+	// checking existing records
+	if rw.RowsAffected == 0 {
+		log.Println("[Info] no entries in the table")
+		responses.JSON(w, http.StatusNotFound, "[Info] no entries in the table")
+		return
+	}
+
+	responses.JSON(w, http.StatusOK, books)
 }
 
 func DeleteBookByID(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
+
+	var book = models.GetBook()
+
+	// extracting URL params
+	params := mux.Vars(r)
+
+	id, err := strconv.Atoi(params["id"])
+	if err != nil {
+		log.Println(err)
+		responses.JSON(w, http.StatusUnprocessableEntity, "[Error] id convertion failed")
+		return
+	}
+
 }
 
 func UpdateBookByID(w http.ResponseWriter, r *http.Request) {

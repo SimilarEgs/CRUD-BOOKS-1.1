@@ -6,7 +6,7 @@ import (
 
 type Book struct {
 	gorm.Model
-	ID         uint32 `gorm:"primary_key;auto_increment" json:"id"           validate:"isdefault"`
+	BookID     uint32 `gorm:"primary_key;auto_increment" json:",omitempty"   validate:"isdefault"`
 	BookName   string `gorm:"size:255;not null;unique"   json:"bookname"     validate:"required"`
 	BookDate   string `gorm:"size:4;not null"            json:"bookdate"     validate:"required"`
 	AuthorName string `gorm:"size:255;not null;unique"   json:"authorname"   validate:"required"`
