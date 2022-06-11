@@ -73,7 +73,7 @@ func GetBookByID(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
 		log.Println(err)
-		responses.JSON(w, http.StatusUnprocessableEntity, "[Error] id convertion failed")
+		responses.JSON(w, http.StatusInternalServerError, "[Error] id convertion failed")
 		return
 	}
 
@@ -143,6 +143,7 @@ func DeleteBookByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rw := dbcon.Delete(&book)
+
 	// checking deletion resualt
 	if rw.RowsAffected != 1 {
 		responses.JSON(w, http.StatusInternalServerError, "[Error] occurred while deleting book entity")
@@ -152,7 +153,76 @@ func DeleteBookByID(w http.ResponseWriter, r *http.Request) {
 	responses.JSON(w, http.StatusNoContent, "[Info] book was sucesfully deleted")
 }
 
+// 1. излвечь id
+// 2. создать переменную которая будет отображать входные данные(инпут бади) и переменную исходной сущности
+// 3. с помощью айди найти в базе сущность для обновления, передать её данные в обновляемую переменную попутно проверя на ошибки
+// 4. завалидировать инпут бади
+// 5. присвоить исходной сущности данные инпут бади
+// 6. сохранить инпут бади и проверить на роус аффектед
+// 7. вернуть заапдейченого юзера
+
 func UpdateBookByID(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
+
+	var newBookValue = models.GetBook() //this book entity represent input data
+	var book = models.GetBook()         // this book entity we change
+
+	params := mux.Vars(r)
+
+	id, err := strconv.Atoi(params["id"])
+	if err != nil {
+		responses.JSON(w, http.StatusInternalServerError, "[Error] id convertion failed")
+		return
+	}
+
+	// find entity to be updated by ID, handle errors
+	res := dbcon.Where("id = ?", id).First(&book)
+
+	if res.Error != nil {
+		log.Println(res.Error)
+
+		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
+			responses.JSON(w, http.StatusNotFound, "[Info] record not found")
+		} else {
+			responses.JSON(w, http.StatusInternalServerError, "[Error] occurred while updating book entity")
+		}
+		return
+	}
+
+	// extracting and processing request data
+	err = json.NewDecoder(r.Body).Decode(&newBookValue)
+	if err != nil {
+		log.Println(err)
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	// validate request data
+	validate := validator.New()
+	err = validate.Struct(newBookValue)
+	if err != nil {
+		log.Println(err)
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	// update desired book entity
+	book.BookName = newBookValue.BookName
+	book.BookDate = newBookValue.BookDate
+	book.AuthorName = newBookValue.AuthorName
+	book.AuthorDate = newBookValue.AuthorDate
+
+	// save updated entity
+	rw := dbcon.Save(&book)
+
+	// checking update result
+	if rw.RowsAffected != 1 {
+		responses.JSON(w, http.StatusInternalServerError, "[Error] occurred while updating book entity")
+		return
+	}
+
+	// send an updated book as as a response
+	responses.JSON(w, http.StatusOK, book)
+
 }
