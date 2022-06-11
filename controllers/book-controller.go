@@ -159,7 +159,7 @@ func DeleteBookByID(w http.ResponseWriter, r *http.Request) {
 // 4. завалидировать инпут бади
 // 5. присвоить исходной сущности данные инпут бади
 // 6. сохранить инпут бади и проверить на роус аффектед
-// 7. вернуть заапдейченого юзера
+// 7. вернуть заапдейченую сущность
 
 func UpdateBookByID(w http.ResponseWriter, r *http.Request) {
 
