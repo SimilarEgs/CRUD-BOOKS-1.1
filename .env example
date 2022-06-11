@@ -1,1 +1,7 @@
 
+DB_HOST=127.0.0.1
+DB_DRIVER=mysql 
+DB_USER="fill with ur DB user"
+DB_PASSWORD="fill with ur DB password"
+DB_NAME="fill with ur DB name"
+DB_PORT=3306 
