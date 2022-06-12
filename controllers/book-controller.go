@@ -58,7 +58,7 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, "[Info] book was sucesfully created")
+	responses.JSON(w, http.StatusOK, "[Info] book was successfully created")
 }
 
 func GetBookByID(w http.ResponseWriter, r *http.Request) {
