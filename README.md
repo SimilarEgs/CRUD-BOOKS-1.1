@@ -17,7 +17,7 @@ DB_PORT=3306
 ```
 - Run code by typing in console:
 ```PowerShell
-~/CRUD-BOOKS go run main.go
+~/CRUD-BOOKS-1.1 go run main.go
 ```
 
 ## API
