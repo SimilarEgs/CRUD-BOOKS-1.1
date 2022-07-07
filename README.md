@@ -4,7 +4,7 @@
 - Clone this repository
 - Create `.env` file in a root folder:
 ```PowerShell
-~/CRUD-BOOKS touch .env
+~/CRUD-BOOKS-1.1 touch .env
 ```
 - Paste next inside created .env file:
 ```.env
